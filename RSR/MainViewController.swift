@@ -43,18 +43,9 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // setting up the navigation bar
-        navigationItem.title = "RSR Revalidatieservice"
-        navigationController?.navigationBar.barTintColor = UIColor(red: 4.0/255.0, green: 147.0/255.0, blue: 187.0/255.0, alpha: 1.0)
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_over_normal")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(showAbout))
-        
-        
-        
+        setupNavigationBar()
         setupViews()
-
     }
-    
     
     
     @objc func showMap() {
@@ -65,6 +56,23 @@ class MainViewController: UIViewController {
     
     @objc func showAbout() {
         
+    }
+
+}
+
+
+
+
+extension MainViewController {
+    
+    // setting up the navigation bar
+    func setupNavigationBar() {
+        navigationItem.title = "RSR Revalidatieservice"
+        navigationController?.navigationBar.barTintColor = UIColor(red: 4.0/255.0, green: 147.0/255.0, blue: 187.0/255.0, alpha: 1.0)
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_over_normal")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(showAbout))
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     
@@ -84,9 +92,4 @@ class MainViewController: UIViewController {
         assistanceButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
         assistanceButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
     }
-    
-    
-    
-
 }
-
