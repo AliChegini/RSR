@@ -10,8 +10,12 @@ import Foundation
 import CoreLocation
 
 
+// Requesting permission and location are two separate tasks
+// hence two protocols are defined in two different classes
+// LocationManagerDelegate and PermissionManagerDelegate
+
 protocol LocationManagerDelegate: class {
-    func obtainedLocation(_ address: String)
+    func obtainedLocation(_ address: String, _ coordinate: CLLocationCoordinate2D)
     func failedToObtainLocation(_ error: Error)
 }
 
@@ -29,11 +33,6 @@ class LocationManager: NSObject {
     }
     
     
-    func requestPermission() {
-        manager.requestWhenInUseAuthorization()
-    }
-
-    
     func requestLocation() {
         manager.requestLocation()
     }
@@ -49,7 +48,6 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         guard let location = locations.last else {
-            print("Error...")
             return
         }
         
@@ -81,7 +79,7 @@ extension LocationManager: CLLocationManagerDelegate {
                 }
                 
                 // sending the obtained address via delegate to MapViewController
-                self.locationDelegate?.obtainedLocation(stringAddress)
+                self.locationDelegate?.obtainedLocation(stringAddress, location.coordinate)
                 
             }
         }

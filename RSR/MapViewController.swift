@@ -8,9 +8,10 @@
 
 import UIKit
 import MapKit
+import Network
 
 
-class MapViewController: UIViewController, LocationManagerDelegate {
+class MapViewController: UIViewController {
     
     // UI elements all in code
     
@@ -39,19 +40,67 @@ class MapViewController: UIViewController, LocationManagerDelegate {
     }()
     
     
-    private let manager = LocationManager()
+    private let permissionManager = PermissionManager()
+    private let locationManager = LocationManager()
     
+    let networkMonitor = NWPathMonitor()
+    let queue = DispatchQueue(label: "NetworkMonitor")
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigationBar()
         setupViews()
         
-        manager.locationDelegate = self
+        permissionManager.permissionDelegate = self
+        locationManager.locationDelegate = self
         
-        manager.requestPermission()
-        manager.requestLocation()
+        // check for internet connection
+        networkMonitor.pathUpdateHandler = { path in
+            if path.status != .satisfied {
+                
+                // alert the user to check internet connection
+                let alert = UIAlertController(title: "Internet Error", message: "Unable to locate your address. Please check your internet connection.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (action) in
+                    // TODO: after retry should update status but its not updated
+                    print("Status after retry: \(path.status)")
+                }))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                print(path.status)
+            }
+        }
+        
+        
+        networkMonitor.start(queue: queue)
+        
+        
+        // request permission
+        do {
+            try permissionManager.requestPermission()
+            
+        } catch {
+            
+            // alert the user in case of denied permission
+            let alert = UIAlertController(title: "Location Permission", message: "Please authorize RSR to find your location while using the app.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    // open the app permission in Settings app
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        
+        locationManager.requestLocation()
+        
+    
     }
     
     
@@ -63,21 +112,44 @@ class MapViewController: UIViewController, LocationManagerDelegate {
     }
     
     
-    func obtainedLocation(_ address: String) {
-        print(address)
+    
+    
+    
+    // LocationManagerDelegate methods
+    
+    func obtainedLocation(_ address: String, _ coordinate: CLLocationCoordinate2D) {
+        // mapView preparation
+        // TODO: need refactoring
+//        let annotation = MKPointAnnotation()
+//        annotation.title = address
+//        annotation.coordinate = coordinate
+//        mapView.addAnnotation(annotation)
+        
     }
     
     func failedToObtainLocation(_ error: Error) {
-        print("This is the error: \(error.localizedDescription)")
+        print("Failed to obtain location: \(error.localizedDescription)")
     }
     
-
+    
+    // PermissionManagerDelegate methods
+    
+    func authorizationSucceeded() {
+        print("permission is granted")
+    }
+    
+    func authorizationFailedWithStatus(_ status: CLAuthorizationStatus) {
+        print("permission is not granted --- status \(status)")
+    }
+    
+    
+    
 }
 
 
 
 
-extension MapViewController {
+extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate {
     
     func setupNavigationBar() {
         navigationItem.title = "RSR Pechhulp"

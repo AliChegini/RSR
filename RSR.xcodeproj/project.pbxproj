@@ -14,6 +14,10 @@
 		7C394D0E231E973B007DD0B1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C394D0D231E973B007DD0B1 /* MapViewController.swift */; };
 		7C394D12231ED925007DD0B1 /* StaticProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C394D11231ED925007DD0B1 /* StaticProperties.swift */; };
 		7C568C69231FBF7F006D8ACF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C568C68231FBF7F006D8ACF /* LocationManager.swift */; };
+		7C8B62592320F0260034CD9D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B62582320F0260034CD9D /* PermissionManager.swift */; };
+		7C8B625B2320FCD90034CD9D /* RSRErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B625A2320FCD90034CD9D /* RSRErrors.swift */; };
+		7C8B625D232139F90034CD9D /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B625C232139F90034CD9D /* CustomAnnotation.swift */; };
+		7C8B625F232140510034CD9D /* CustomAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B625E232140510034CD9D /* CustomAnnotationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,10 @@
 		7C394D0D231E973B007DD0B1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		7C394D11231ED925007DD0B1 /* StaticProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticProperties.swift; sourceTree = "<group>"; };
 		7C568C68231FBF7F006D8ACF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		7C8B62582320F0260034CD9D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		7C8B625A2320FCD90034CD9D /* RSRErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSRErrors.swift; sourceTree = "<group>"; };
+		7C8B625C232139F90034CD9D /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
+		7C8B625E232140510034CD9D /* CustomAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +70,10 @@
 				7C394CFD231E53CC007DD0B1 /* MainViewController.swift */,
 				7C394D0D231E973B007DD0B1 /* MapViewController.swift */,
 				7C568C68231FBF7F006D8ACF /* LocationManager.swift */,
+				7C8B62582320F0260034CD9D /* PermissionManager.swift */,
+				7C8B625E232140510034CD9D /* CustomAnnotationView.swift */,
+				7C8B625C232139F90034CD9D /* CustomAnnotation.swift */,
+				7C8B625A2320FCD90034CD9D /* RSRErrors.swift */,
 				7C394D11231ED925007DD0B1 /* StaticProperties.swift */,
 				7C394D02231E53CD007DD0B1 /* Assets.xcassets */,
 				7C394D04231E53CD007DD0B1 /* LaunchScreen.storyboard */,
@@ -142,9 +154,13 @@
 			files = (
 				7C394CFE231E53CC007DD0B1 /* MainViewController.swift in Sources */,
 				7C394D0E231E973B007DD0B1 /* MapViewController.swift in Sources */,
+				7C8B62592320F0260034CD9D /* PermissionManager.swift in Sources */,
 				7C568C69231FBF7F006D8ACF /* LocationManager.swift in Sources */,
+				7C8B625D232139F90034CD9D /* CustomAnnotation.swift in Sources */,
 				7C394D12231ED925007DD0B1 /* StaticProperties.swift in Sources */,
 				7C394CFC231E53CC007DD0B1 /* AppDelegate.swift in Sources */,
+				7C8B625F232140510034CD9D /* CustomAnnotationView.swift in Sources */,
+				7C8B625B2320FCD90034CD9D /* RSRErrors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
