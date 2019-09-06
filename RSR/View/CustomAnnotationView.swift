@@ -16,9 +16,7 @@ import MapKit
 // class to model annotation view
 
 class CustomAnnotationView: MKAnnotationView {
-    // TODO:
+    
     
 }
-
-
-
+    

@@ -67,19 +67,43 @@
 			isa = PBXGroup;
 			children = (
 				7C394CFB231E53CC007DD0B1 /* AppDelegate.swift */,
-				7C394CFD231E53CC007DD0B1 /* MainViewController.swift */,
-				7C394D0D231E973B007DD0B1 /* MapViewController.swift */,
-				7C568C68231FBF7F006D8ACF /* LocationManager.swift */,
-				7C8B62582320F0260034CD9D /* PermissionManager.swift */,
-				7C8B625E232140510034CD9D /* CustomAnnotationView.swift */,
-				7C8B625C232139F90034CD9D /* CustomAnnotation.swift */,
-				7C8B625A2320FCD90034CD9D /* RSRErrors.swift */,
-				7C394D11231ED925007DD0B1 /* StaticProperties.swift */,
+				7C4E8CA023224BE300816476 /* Model */,
+				7C4E8CA123224BF400816476 /* View */,
+				7C4E8CA223224BFF00816476 /* Controller */,
 				7C394D02231E53CD007DD0B1 /* Assets.xcassets */,
 				7C394D04231E53CD007DD0B1 /* LaunchScreen.storyboard */,
 				7C394D07231E53CD007DD0B1 /* Info.plist */,
 			);
 			path = RSR;
+			sourceTree = "<group>";
+		};
+		7C4E8CA023224BE300816476 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7C568C68231FBF7F006D8ACF /* LocationManager.swift */,
+				7C8B62582320F0260034CD9D /* PermissionManager.swift */,
+				7C8B625A2320FCD90034CD9D /* RSRErrors.swift */,
+				7C394D11231ED925007DD0B1 /* StaticProperties.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7C4E8CA123224BF400816476 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7C8B625E232140510034CD9D /* CustomAnnotationView.swift */,
+				7C8B625C232139F90034CD9D /* CustomAnnotation.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7C4E8CA223224BFF00816476 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7C394CFD231E53CC007DD0B1 /* MainViewController.swift */,
+				7C394D0D231E973B007DD0B1 /* MapViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

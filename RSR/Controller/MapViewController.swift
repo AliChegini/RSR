@@ -11,7 +11,7 @@ import MapKit
 import Network
 
 
-class MapViewController: UIViewController {
+class MapViewController: UIViewController, MKMapViewDelegate {
     
     // UI elements all in code
     
@@ -19,6 +19,7 @@ class MapViewController: UIViewController {
        let map = MKMapView()
         map.translatesAutoresizingMaskIntoConstraints = false
         map.showsUserLocation = true
+        
         return map
     }()
     
@@ -46,12 +47,17 @@ class MapViewController: UIViewController {
     let networkMonitor = NWPathMonitor()
     let queue = DispatchQueue(label: "NetworkMonitor")
     
+    
+    var pin: CustomAnnotation!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigationBar()
         setupViews()
+        
+        mapView.delegate = self
         
         permissionManager.permissionDelegate = self
         locationManager.locationDelegate = self
@@ -120,11 +126,9 @@ class MapViewController: UIViewController {
     func obtainedLocation(_ address: String, _ coordinate: CLLocationCoordinate2D) {
         // mapView preparation
         // TODO: need refactoring
-//        let annotation = MKPointAnnotation()
-//        annotation.title = address
-//        annotation.coordinate = coordinate
-//        mapView.addAnnotation(annotation)
-        
+        pin = CustomAnnotation(coordinate: coordinate, title: address)
+        mapView.addAnnotation(pin)
+        mapView.selectAnnotation(pin, animated: true)
     }
     
     func failedToObtainLocation(_ error: Error) {
@@ -143,8 +147,49 @@ class MapViewController: UIViewController {
     }
     
     
+    // methods for Custom annotations
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        let annotationView = MKAnnotationView(annotation: pin, reuseIdentifier: "UserLocation")
+        annotationView.image = UIImage(named: "marker")
+        annotationView.canShowCallout = true
+        configureDetailView(annotationView: annotationView)
+
+        return annotationView
+        
+    }
+    
+    
+    func configureDetailView(annotationView: MKAnnotationView) {
+        let width = 300
+        let height = 200
+        
+        let calloutView = UIView()
+        let views = ["calloutView": calloutView]
+        
+        calloutView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[calloutView(300)]", options: [], metrics: nil, views: views))
+        calloutView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[calloutView(200)]", options: [], metrics: nil, views: views))
+        
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+        imageView.image = UIImage(named: "address_back")
+        calloutView.addSubview(imageView)
+        
+        annotationView.detailCalloutAccessoryView = calloutView
+    }
+    
+    
     
 }
+
+
+
+
+
+
+
+
+
 
 
 

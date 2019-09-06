@@ -18,15 +18,15 @@ import MapKit
 
 // class to model annotation object
 
-class RSRAnnotation: NSObject, MKAnnotation {
+class CustomAnnotation: NSObject, MKAnnotation {
+    
     @objc dynamic var coordinate: CLLocationCoordinate2D
     var title: String?
     
     init(coordinate: CLLocationCoordinate2D, title: String) {
         self.coordinate = coordinate
         self.title = title
+        //super.init()
     }
+    
 }
-
-
-
