@@ -41,6 +41,35 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }()
     
     
+    let callChargeView: UIView = {
+       let customView = UIView()
+        customView.translatesAutoresizingMaskIntoConstraints = false
+        customView.backgroundColor = .green
+        customView.isHidden = true
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "Hello world"
+        let messageLabel = UILabel()
+        messageLabel.text = "It's me"
+        let ringButton = UIButton()
+        ringButton.setTitle("Bel nu", for: .normal)
+        let cancelButton = UIButton()
+        cancelButton.setTitle("Annuleren", for: .normal)
+        
+        customView.addSubview(titleLabel)
+        customView.addSubview(messageLabel)
+        customView.addSubview(ringButton)
+        customView.addSubview(cancelButton)
+        
+        customView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        customView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        return customView
+    }()
+    
+    
+    
+    
     private let permissionManager = PermissionManager()
     private let locationManager = LocationManager()
     
@@ -140,10 +169,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     
     @objc func callRSR() {
-        let number = "00319007788990"
-        if let url = URL(string: "tel://\(number)"), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
+        callChargeView.isHidden = false
+        view.addSubview(callChargeView)
+        hideElements()
+//        let number = "00319007788990"
+//        if let url = URL(string: "tel://\(number)"), UIApplication.shared.canOpenURL(url) {
+//            UIApplication.shared.open(url)
+//        }
     }
     
     
@@ -257,4 +289,10 @@ extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate 
         callButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
         callButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
     }
+    
+    func hideElements() {
+        callButton.isHidden = true
+    }
+    
+    
 }
