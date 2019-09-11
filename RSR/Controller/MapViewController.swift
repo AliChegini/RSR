@@ -41,31 +41,32 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }()
     
     
-    let callChargeView: UIView = {
-       let customView = UIView()
-        customView.translatesAutoresizingMaskIntoConstraints = false
-        customView.backgroundColor = .green
-        customView.isHidden = true
-        
-        let titleLabel = UILabel()
-        titleLabel.text = "Hello world"
-        let messageLabel = UILabel()
-        messageLabel.text = "It's me"
-        let ringButton = UIButton()
-        ringButton.setTitle("Bel nu", for: .normal)
-        let cancelButton = UIButton()
-        cancelButton.setTitle("Annuleren", for: .normal)
-        
-        customView.addSubview(titleLabel)
-        customView.addSubview(messageLabel)
-        customView.addSubview(ringButton)
-        customView.addSubview(cancelButton)
-        
-        customView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        customView.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        
-        return customView
-    }()
+//    let callChargeView: UIView = {
+//       let customView = UIView()
+//        customView.translatesAutoresizingMaskIntoConstraints = false
+//        customView.backgroundColor = .green
+//        customView.isHidden = true
+//
+//        let titleLabel = UILabel()
+//        titleLabel.text = "Hello world"
+//        titleLabel.textColor = .black
+//        let messageLabel = UILabel()
+//        messageLabel.text = "It's me"
+//        let ringButton = UIButton()
+//        ringButton.setTitle("Bel nu", for: .normal)
+//        let cancelButton = UIButton()
+//        cancelButton.setTitle("Annuleren", for: .normal)
+//
+//        customView.addSubview(titleLabel)
+//        customView.addSubview(messageLabel)
+//        customView.addSubview(ringButton)
+//        customView.addSubview(cancelButton)
+//
+//        customView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+//        customView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+//
+//        return customView
+//    }()
     
     
     
@@ -169,13 +170,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     
     @objc func callRSR() {
-        callChargeView.isHidden = false
-        view.addSubview(callChargeView)
+        let popupVC = CallChargesViewController()
+        popupVC.modalPresentationStyle = .overCurrentContext
+        popupVC.modalTransitionStyle = .crossDissolve
+        present(popupVC, animated: true, completion: nil)
+        
         hideElements()
-//        let number = "00319007788990"
-//        if let url = URL(string: "tel://\(number)"), UIApplication.shared.canOpenURL(url) {
-//            UIApplication.shared.open(url)
-//        }
+        
     }
     
     
@@ -251,15 +252,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
 
 
-
-
-
-
-
-
-
-
-
+// extension
 
 extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate {
     
