@@ -26,7 +26,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     let callButton: UIButton = {
         let button = UIButton()
-        let iconImage = UIImage(named: "ic_call")
+        let iconImage = UIImage(named: "ic_phone")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Bel RSR nu", for: .normal)
         button.titleLabel?.textAlignment = .center
@@ -178,8 +178,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         hideElements()
         
     }
-    
-    
     
     
     
