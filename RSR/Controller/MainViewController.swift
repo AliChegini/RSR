@@ -108,9 +108,7 @@ extension MainViewController {
         } else if UIDevice.current.userInterfaceIdiom == .pad {
             aboutButton.isHidden = false
         }
-        // TODO: fix stack view issues where it expand the button's height
-        
-        
+       
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
@@ -130,7 +128,6 @@ extension MainViewController {
         // auto layout constraint for stackview
         stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
         stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        stackView.heightAnchor.constraint(equalToConstant: 170).isActive = true
         stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
 
@@ -139,20 +136,18 @@ extension MainViewController {
         aboutButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
         // auto layout constraint for assistance button
-//        assistanceButton.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
-//        assistanceButton.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
-        
-//        assistanceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//
-//        assistanceButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
-//        assistanceButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
-        
-        
-        // auto layout constraint for about button
-        //aboutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//        aboutButton.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
-//        aboutButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
-//        aboutButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
-//        aboutButton.topAnchor.constraint(equalTo: assistanceButton.bottomAnchor, constant: 30).isActive = true
+
+        // TODO: Clean up isActivate = true
     }
 }
+
+
+// Final task list:
+// 1. add zoom span logic --- done
+// 3. fix button size for small device, it should not expand the button size --- done
+// 5. fix custom callout issues --- done
+
+// 6. refactoring and cleanup, fix UI details like small line on navbar
+// 2. fix popupview for ipad
+// 4. fix show elements on the map while opoupView is up
+// 7. add privacy alert at first launch : Om gebruik te maken van deze app dient u het privacybeleid te accepteren

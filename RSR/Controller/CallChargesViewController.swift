@@ -10,7 +10,7 @@ import UIKit
 
 class CallChargesViewController: UIViewController {
     
-    
+    // UI elements for popupView
     let titleLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -60,6 +60,7 @@ class CallChargesViewController: UIViewController {
         
         return button
     }()
+    
     
     // UI elements for popup will be added to popupBox view
     let popupBox: UIView = {

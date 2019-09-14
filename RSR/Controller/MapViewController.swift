@@ -41,54 +41,75 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }()
     
     
-//    let callChargeView: UIView = {
-//       let customView = UIView()
-//        customView.translatesAutoresizingMaskIntoConstraints = false
-//        customView.backgroundColor = .green
-//        customView.isHidden = true
-//
-//        let titleLabel = UILabel()
-//        titleLabel.text = "Hello world"
-//        titleLabel.textColor = .black
-//        let messageLabel = UILabel()
-//        messageLabel.text = "It's me"
-//        let ringButton = UIButton()
-//        ringButton.setTitle("Bel nu", for: .normal)
-//        let cancelButton = UIButton()
-//        cancelButton.setTitle("Annuleren", for: .normal)
-//
-//        customView.addSubview(titleLabel)
-//        customView.addSubview(messageLabel)
-//        customView.addSubview(ringButton)
-//        customView.addSubview(cancelButton)
-//
-//        customView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-//        customView.widthAnchor.constraint(equalToConstant: 300).isActive = true
-//
-//        return customView
-//    }()
+    // UI elements for CallOutViews
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Uw locatie:"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = .white
+        
+        return label
+    }()
     
+    
+    let addressLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = .white
+        
+        return label
+    }()
+    
+    
+    let instructionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Onthoud deze locatie voor het telefoongesprek."
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .white
+        
+        return label
+    }()
+
+    
+    let calloutView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 10
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(named: "address_back")
+        
+        return imageView
+    }()
     
     
     
     private let permissionManager = PermissionManager()
     private let locationManager = LocationManager()
     
+    // constants for monitoring network status
     let networkMonitor = NWPathMonitor()
     let queue = DispatchQueue(label: "NetworkMonitor")
 
     // by default isLocationObtained is false
-    var isUserLocationObtained: Bool = false {
-        didSet {
-            print("we can easily observe the isUserLocationObtained \(self.isUserLocationObtained)")
-        }
-    }
+    var isUserLocationObtained: Bool = false
     
     // by default network status is unknown
     var networkStatus: NetworkStatus = .unknown
     
     
     var pin: CustomAnnotation!
+    //var userAddress: String?
     
 
     override func viewDidLoad() {
@@ -97,11 +118,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         setupNavigationBar()
         setupViews()
         
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
         mapView.delegate = self
         
         permissionManager.permissionDelegate = self
         locationManager.locationDelegate = self
-        
         
         
         // check for internet connection
@@ -140,7 +166,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             self.present(alert, animated: true, completion: nil)
         }
         
-        
+    
         // if device is notConnected show network alert
         if networkStatus == .notConnected{
             showNetworkAlert()
@@ -148,8 +174,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             locationManager.requestLocation()
         }
         
-    
+        
     }
+    
+    
     
     func showNetworkAlert() {
         // alert the user to check internet connection
@@ -188,9 +216,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // TODO: need refactoring
         pin = CustomAnnotation(coordinate: coordinate, title: address)
         mapView.addAnnotation(pin)
-        mapView.selectAnnotation(pin, animated: true)
         isUserLocationObtained = true
+        addressLabel.text = address
+        
+        // Zooming on annotation
+        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        mapView.setRegion(region, animated: true)
+        
+        mapView.selectAnnotation(pin, animated: true)
     }
+    
     
     func failedToObtainLocation(_ error: Error) {
         isUserLocationObtained = false
@@ -215,37 +251,52 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         let annotationView = MKAnnotationView(annotation: pin, reuseIdentifier: "UserLocation")
         annotationView.image = UIImage(named: "marker")
-        annotationView.canShowCallout = true
-        configureDetailView(annotationView: annotationView)
-
+        annotationView.canShowCallout = false
+        
         return annotationView
-        
     }
     
     
-    func configureDetailView(annotationView: MKAnnotationView) {
-        let width = 300
-        let height = 200
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         
-        let calloutView = UIView()
-        calloutView.translatesAutoresizingMaskIntoConstraints = false
+        calloutView.addSubview(titleLabel)
+        calloutView.addSubview(addressLabel)
+        calloutView.addSubview(instructionLabel)
         
-        let views = ["calloutView": calloutView]
+        // constraints for titleLabel
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 20)
+            ])
         
-        calloutView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[calloutView(300)]", options: [], metrics: nil, views: views))
-        calloutView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[calloutView(200)]", options: [], metrics: nil, views: views))
-       
+        // constraints for addressLabel
+        NSLayoutConstraint.activate([
+            addressLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
+            addressLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
+            addressLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor)
+            ])
         
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
-        imageView.image = UIImage(named: "address_back")
+        // constraints for instructionLabel
+        NSLayoutConstraint.activate([
+            instructionLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
+            instructionLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 40),
+            instructionLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor)
+            ])
         
-        calloutView.addSubview(imageView)
         
-        annotationView.detailCalloutAccessoryView = calloutView
+        view.addSubview(calloutView)
+        
+        // constraints for calloutView
+        // (view) is the pin(marker) here
+        NSLayoutConstraint.activate([
+            calloutView.bottomAnchor.constraint(equalTo: view.topAnchor),
+            calloutView.widthAnchor.constraint(equalToConstant: 250),
+            calloutView.heightAnchor.constraint(equalToConstant: 250),
+            calloutView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
+            ])
     }
     
-    
-    
+
 }
 
 
@@ -282,7 +333,13 @@ extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate 
     }
     
     func hideElements() {
+        calloutView.isHidden = true
         callButton.isHidden = true
+    }
+    
+    func showElements() {
+        calloutView.isHidden = false
+        callButton.isHidden = false
     }
     
     
