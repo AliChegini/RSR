@@ -13,8 +13,6 @@ import Network
 
 class MapViewController: UIViewController, MKMapViewDelegate {
     
-    // UI elements all in code
-    
     let mapView: MKMapView = {
        let map = MKMapView()
         map.translatesAutoresizingMaskIntoConstraints = false
@@ -24,75 +22,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }()
     
     
-    let callButton: UIButton = {
-        let button = UIButton()
-        let iconImage = UIImage(named: "ic_phone")
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Bel RSR nu", for: .normal)
-        button.titleLabel?.textAlignment = .center
-        button.layer.cornerRadius = 10
-        button.setBackgroundImage(UIImage(named: "btn_normal"), for: .normal)
-        button.setImage(iconImage, for: .normal)
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 50)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 150)
-        button.addTarget(self, action: #selector(callRSR), for: .touchUpInside)
-        
-        return button
-    }()
     
+    private let popupBoxView = PopupBoxView().popupBox
+    private let callButton = CallButtonView().callButton
     
-    // UI elements for CallOutViews
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Uw locatie:"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .white
-        
-        return label
-    }()
-    
-    
-    let addressLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.numberOfLines = 2
-        label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.systemFont(ofSize: 18)
-        label.textColor = .white
-        
-        return label
-    }()
-    
-    
-    let instructionLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Onthoud deze locatie voor het telefoongesprek."
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.numberOfLines = 2
-        label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .white
-        
-        return label
-    }()
-
-    
-    let calloutView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 10
-        imageView.layer.masksToBounds = true
-        imageView.image = UIImage(named: "address_back")
-        
-        return imageView
-    }()
-    
-    
+    // calloutView consist of two parts,
+    // static parts(top and bottom label) and dynamic part(address)
+    private let callout = CalloutViews()
     
     private let permissionManager = PermissionManager()
     private let locationManager = LocationManager()
@@ -107,11 +43,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // by default network status is unknown
     var networkStatus: NetworkStatus = .unknown
     
-    
     var pin: CustomAnnotation!
-    //var userAddress: String?
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -198,13 +132,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     
     @objc func callRSR() {
-        let popupVC = CallChargesViewController()
-        popupVC.modalPresentationStyle = .overCurrentContext
-        popupVC.modalTransitionStyle = .crossDissolve
-        present(popupVC, animated: true, completion: nil)
-        
+        popupBoxView.isHidden = false
         hideElements()
-        
+    }
+    
+    
+    @objc func cancelAction() {
+        print("cancel button is tapped")
+        popupBoxView.isHidden = true
+        showElements()
+    }
+    
+    
+    @objc func confirmedCallRSR() {
+        let number = "00319007788990"
+        if let url = URL(string: "tel://\(number)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
     }
     
     
@@ -217,7 +161,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         pin = CustomAnnotation(coordinate: coordinate, title: address)
         mapView.addAnnotation(pin)
         isUserLocationObtained = true
-        addressLabel.text = address
+        callout.configureAddressLabel(address: address)
         
         // Zooming on annotation
         let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -257,43 +201,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     
+    
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         
-        calloutView.addSubview(titleLabel)
-        calloutView.addSubview(addressLabel)
-        calloutView.addSubview(instructionLabel)
-        
-        // constraints for titleLabel
-        NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 20)
-            ])
-        
-        // constraints for addressLabel
-        NSLayoutConstraint.activate([
-            addressLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
-            addressLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
-            addressLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor)
-            ])
-        
-        // constraints for instructionLabel
-        NSLayoutConstraint.activate([
-            instructionLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
-            instructionLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 40),
-            instructionLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor)
-            ])
-        
-        
-        view.addSubview(calloutView)
+        view.addSubview(callout.calloutWithoutAddress)
         
         // constraints for calloutView
-        // (view) is the pin(marker) here
+        // view is the pin(marker)
         NSLayoutConstraint.activate([
-            calloutView.bottomAnchor.constraint(equalTo: view.topAnchor),
-            calloutView.widthAnchor.constraint(equalToConstant: 250),
-            calloutView.heightAnchor.constraint(equalToConstant: 250),
-            calloutView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
+            callout.calloutWithoutAddress.bottomAnchor.constraint(equalTo: view.topAnchor),
+            callout.calloutWithoutAddress.widthAnchor.constraint(equalToConstant: 250),
+            callout.calloutWithoutAddress.heightAnchor.constraint(equalToConstant: 250),
+            callout.calloutWithoutAddress.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
             ])
+        
+        
+        
+        
     }
     
 
@@ -316,6 +241,7 @@ extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate 
     func setupViews() {
         view.addSubview(mapView)
         view.addSubview(callButton)
+        view.addSubview(popupBoxView)
         
         // auto layout constraint for map view
         mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -330,15 +256,23 @@ extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate 
         callButton.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
         callButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
         callButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
+        
+        
+        // autolayout constraint for popupBox
+        popupBoxView.heightAnchor.constraint(equalToConstant: view.frame.height / 3).isActive = true
+        popupBoxView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40).isActive = true
+        popupBoxView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        popupBoxView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
     }
     
     func hideElements() {
-        calloutView.isHidden = true
+        callout.calloutWithoutAddress.isHidden = true
         callButton.isHidden = true
     }
     
     func showElements() {
-        calloutView.isHidden = false
+        callout.calloutWithoutAddress.isHidden = false
         callButton.isHidden = false
     }
     

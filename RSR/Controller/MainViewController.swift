@@ -92,13 +92,15 @@ class MainViewController: UIViewController {
 
 
 
-
 extension MainViewController {
     
     // setting up the navigation bar
     func setupNavigationBar() {
         navigationItem.title = "RSR Revalidatieservice"
         navigationController?.navigationBar.setBackgroundImage(UIImage(named: "navig_bar_back"), for: .default)
+
+        // TODO: remove the 1 px bottom line from navBar
+        
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
         // check if device is phone show rightBarButton and hide aboutButton
@@ -146,8 +148,10 @@ extension MainViewController {
 // 1. add zoom span logic --- done
 // 3. fix button size for small device, it should not expand the button size --- done
 // 5. fix custom callout issues --- done
+// 4. fix show elements on the map while opoupView is up --- done
+
+// 2. fix popupview for ipad/iphone - half done
+// improved code/ folder structure --- half done
 
 // 6. refactoring and cleanup, fix UI details like small line on navbar
-// 2. fix popupview for ipad
-// 4. fix show elements on the map while opoupView is up
 // 7. add privacy alert at first launch : Om gebruik te maken van deze app dient u het privacybeleid te accepteren

@@ -10,13 +10,7 @@ import UIKit
 import MapKit
 
 
-// To display an annotation on a map, app must provide two distinct objects:
-// an annotation object (CustomAnnotation.swift) and an annotation view (CustomAnnotationView.swift)
-
-// TODO: clean up the folder structure
-
-
-// class to model annotation object
+// class to model custom annotation object
 
 class CustomAnnotation: NSObject, MKAnnotation {
     
@@ -26,7 +20,6 @@ class CustomAnnotation: NSObject, MKAnnotation {
     init(coordinate: CLLocationCoordinate2D, title: String) {
         self.coordinate = coordinate
         self.title = title
-        //super.init()
     }
     
 }
