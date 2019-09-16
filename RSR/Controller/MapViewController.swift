@@ -13,25 +13,25 @@ import Network
 
 class MapViewController: UIViewController, MKMapViewDelegate {
     
-    let mapView: MKMapView = {
-       let map = MKMapView()
-        map.translatesAutoresizingMaskIntoConstraints = false
-        map.showsUserLocation = true
-        
-        return map
-    }()
-    
-    
-    
-    private let popupBoxView = PopupBoxView().popupBox
-    private let callButton = CallButtonView().callButton
+    private let mapViewElements = MapViews()
     
     // calloutView consist of two parts,
     // static parts(top and bottom label) and dynamic part(address)
     private let callout = CalloutViews()
     
+    // All the UI elements for iPhone popup, and a function to
+    // setup the autolayout constraints are included in popupElements
+    private let popupElements = IPhonePopupViews()
+    
+    
+    // All the UI elements for iPad footer, and a function to
+    // setup the autolayout constraints are included in footerElements
+    private let footerElements = IPadFooterViews()
+    
+    
     private let permissionManager = PermissionManager()
     private let locationManager = LocationManager()
+    
     
     // constants for monitoring network status
     let networkMonitor = NWPathMonitor()
@@ -46,11 +46,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var pin: CustomAnnotation!
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigationBar()
-        setupViews()
+        mapViewElements.setupViews(view: view)
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            popupElements.setupViews(view: view)
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+            mapViewElements.callButton.isHidden = true
+            // add ipad footer box here
+        }
+        
+        
+        
+        //setupViews()
         
     }
     
@@ -58,7 +70,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        mapView.delegate = self
+        mapViewElements.mapView.delegate = self
         
         permissionManager.permissionDelegate = self
         locationManager.locationDelegate = self
@@ -66,8 +78,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         // check for internet connection
         networkMonitor.pathUpdateHandler = { path in
-            
-            print("This is the path status \(path.status)")
             // Note: NWPath won't change within a given invocation of pathUpdateHandler
             // unless the view gets dismissed
             if path.status == .satisfied {
@@ -80,24 +90,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         networkMonitor.start(queue: queue)
         
         
-        // request permission
-        do {
+        do {  // request permission
             try permissionManager.requestPermission()
-            
         } catch {
-            
-            // alert the user in case of denied permission
-            let alert = UIAlertController(title: "Location Permission", message: "Please authorize RSR to find your location while using the app.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    // open the app permission in Settings app
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
-            }))
-            
-            self.present(alert, animated: true, completion: nil)
+            showPermissionAlert()
         }
         
     
@@ -108,38 +104,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             locationManager.requestLocation()
         }
         
-        
     }
     
-    
-    
-    func showNetworkAlert() {
-        // alert the user to check internet connection
-        let alert = UIAlertController(title: "Internet Error", message: "Unable to locate your address. Please check your internet connection.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (action) in
-            // if user location is still not obtained request it and show alert
-            if self.isUserLocationObtained == false {
-                self.locationManager.requestLocation()
-                self.showNetworkAlert()
-            }
-        }))
-        
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
     
     
     @objc func callRSR() {
-        popupBoxView.isHidden = false
+        popupElements.popupBox.isHidden = false
         hideElements()
     }
     
     
     @objc func cancelAction() {
-        print("cancel button is tapped")
-        popupBoxView.isHidden = true
+        popupElements.popupBox.isHidden = true
         showElements()
     }
     
@@ -159,16 +135,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // mapView preparation
         // TODO: need refactoring
         pin = CustomAnnotation(coordinate: coordinate, title: address)
-        mapView.addAnnotation(pin)
+        mapViewElements.mapView.addAnnotation(pin)
         isUserLocationObtained = true
         callout.configureAddressLabel(address: address)
         
         // Zooming on annotation
         let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         let region = MKCoordinateRegion(center: coordinate, span: span)
-        mapView.setRegion(region, animated: true)
+        mapViewElements.mapView.setRegion(region, animated: true)
         
-        mapView.selectAnnotation(pin, animated: true)
+        mapViewElements.mapView.selectAnnotation(pin, animated: true)
     }
     
     
@@ -202,7 +178,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     
     
-    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         
         view.addSubview(callout.calloutWithoutAddress)
@@ -215,10 +190,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             callout.calloutWithoutAddress.heightAnchor.constraint(equalToConstant: 250),
             callout.calloutWithoutAddress.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
             ])
-        
-        
-        
-        
     }
     
 
@@ -238,42 +209,56 @@ extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate 
     }
     
     
+    // alert the user to check internet connection
+    func showNetworkAlert() {
+        let alert = UIAlertController(title: "Internet Error", message: "Unable to locate your address. Please check your internet connection.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (action) in
+            // if user location is still not obtained request it and show alert
+            if self.isUserLocationObtained == false {
+                self.locationManager.requestLocation()
+                self.showNetworkAlert()
+            }
+        }))
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    
+    
+    // alert the user in case of denied permission
+    func showPermissionAlert() {
+        let alert = UIAlertController(title: "Location Permission", message: "Please authorize RSR to find your location while using the app.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                // open the app permission in Settings app
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    
     func setupViews() {
-        view.addSubview(mapView)
-        view.addSubview(callButton)
-        view.addSubview(popupBoxView)
-        
-        // auto layout constraint for map view
-        mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        mapView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        mapView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-        mapView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        
-        
-        // auto layout constraint for assistance button
-        callButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
-        callButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        callButton.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
-        callButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
-        callButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
-        
-        
-        // autolayout constraint for popupBox
-        popupBoxView.heightAnchor.constraint(equalToConstant: view.frame.height / 3).isActive = true
-        popupBoxView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40).isActive = true
-        popupBoxView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        popupBoxView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
     }
     
+    
     func hideElements() {
         callout.calloutWithoutAddress.isHidden = true
-        callButton.isHidden = true
+        //callButton.isHidden = true
     }
     
     func showElements() {
         callout.calloutWithoutAddress.isHidden = false
-        callButton.isHidden = false
+        //callButton.isHidden = false
     }
     
     

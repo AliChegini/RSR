@@ -45,21 +45,24 @@ class CalloutViews: UIView {
         instructionLabel.textColor = .white
         
         
+        // label at top of the bubble
         calloutView.addSubview(titleLabel)
+        // label at bottom of the bubble
         calloutView.addSubview(instructionLabel)
         
-        // constraints for titleLabel
+        
+        
         NSLayoutConstraint.activate([
+            
+            // auto layout constraints for titleLabel
             titleLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 20)
-            ])
-        
-        
-        // constraints for instructionLabel
-        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 20),
+            
+            // auto layout constraints for instructionLabel
             instructionLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
             instructionLabel.topAnchor.constraint(equalTo: calloutView.bottomAnchor, constant: -80),
             instructionLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor)
+            
             ])
         
         

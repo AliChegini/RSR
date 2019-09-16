@@ -1,5 +1,5 @@
 //
-//  IPADFooterBox.swift
+//  IPadFooterViews.swift
 //  RSR
 //
 //  Created by Ehsan on 15/09/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IPADFooterBox: UIView {
+class IPadFooterViews: UIView {
 
     
 

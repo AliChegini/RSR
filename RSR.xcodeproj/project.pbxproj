@@ -13,11 +13,12 @@
 		7C394D06231E53CD007DD0B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C394D04231E53CD007DD0B1 /* LaunchScreen.storyboard */; };
 		7C394D0E231E973B007DD0B1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C394D0D231E973B007DD0B1 /* MapViewController.swift */; };
 		7C394D12231ED925007DD0B1 /* StaticProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C394D11231ED925007DD0B1 /* StaticProperties.swift */; };
+		7C4275AC232F7AC300CC0767 /* MainViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4275AB232F7AC300CC0767 /* MainViews.swift */; };
+		7C4275AE232F86E700CC0767 /* MapViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4275AD232F86E700CC0767 /* MapViews.swift */; };
 		7C568C69231FBF7F006D8ACF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C568C68231FBF7F006D8ACF /* LocationManager.swift */; };
-		7C5F7CDC232E340200272CA1 /* PopupBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F7CDB232E340200272CA1 /* PopupBoxView.swift */; };
-		7C5F7CDE232E3FDC00272CA1 /* CallButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F7CDD232E3FDC00272CA1 /* CallButtonView.swift */; };
+		7C5F7CDC232E340200272CA1 /* IPhonePopupViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F7CDB232E340200272CA1 /* IPhonePopupViews.swift */; };
 		7C5F7CE0232E49DD00272CA1 /* CalloutViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F7CDF232E49DD00272CA1 /* CalloutViews.swift */; };
-		7C5F7CE2232E4D9C00272CA1 /* IPADFooterBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F7CE1232E4D9C00272CA1 /* IPADFooterBox.swift */; };
+		7C5F7CE2232E4D9C00272CA1 /* IPadFooterViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F7CE1232E4D9C00272CA1 /* IPadFooterViews.swift */; };
 		7C8B62592320F0260034CD9D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B62582320F0260034CD9D /* PermissionManager.swift */; };
 		7C8B625B2320FCD90034CD9D /* RSRErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B625A2320FCD90034CD9D /* RSRErrors.swift */; };
 		7C8B625D232139F90034CD9D /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B625C232139F90034CD9D /* CustomAnnotation.swift */; };
@@ -32,11 +33,12 @@
 		7C394D07231E53CD007DD0B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C394D0D231E973B007DD0B1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		7C394D11231ED925007DD0B1 /* StaticProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticProperties.swift; sourceTree = "<group>"; };
+		7C4275AB232F7AC300CC0767 /* MainViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViews.swift; sourceTree = "<group>"; };
+		7C4275AD232F86E700CC0767 /* MapViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViews.swift; sourceTree = "<group>"; };
 		7C568C68231FBF7F006D8ACF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		7C5F7CDB232E340200272CA1 /* PopupBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupBoxView.swift; sourceTree = "<group>"; };
-		7C5F7CDD232E3FDC00272CA1 /* CallButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallButtonView.swift; sourceTree = "<group>"; };
+		7C5F7CDB232E340200272CA1 /* IPhonePopupViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPhonePopupViews.swift; sourceTree = "<group>"; };
 		7C5F7CDF232E49DD00272CA1 /* CalloutViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutViews.swift; sourceTree = "<group>"; };
-		7C5F7CE1232E4D9C00272CA1 /* IPADFooterBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPADFooterBox.swift; sourceTree = "<group>"; };
+		7C5F7CE1232E4D9C00272CA1 /* IPadFooterViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadFooterViews.swift; sourceTree = "<group>"; };
 		7C8B62582320F0260034CD9D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		7C8B625A2320FCD90034CD9D /* RSRErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSRErrors.swift; sourceTree = "<group>"; };
 		7C8B625C232139F90034CD9D /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
@@ -99,9 +101,10 @@
 			children = (
 				7C5F7CDF232E49DD00272CA1 /* CalloutViews.swift */,
 				7C8B625C232139F90034CD9D /* CustomAnnotation.swift */,
-				7C5F7CDB232E340200272CA1 /* PopupBoxView.swift */,
-				7C5F7CDD232E3FDC00272CA1 /* CallButtonView.swift */,
-				7C5F7CE1232E4D9C00272CA1 /* IPADFooterBox.swift */,
+				7C5F7CE1232E4D9C00272CA1 /* IPadFooterViews.swift */,
+				7C5F7CDB232E340200272CA1 /* IPhonePopupViews.swift */,
+				7C4275AB232F7AC300CC0767 /* MainViews.swift */,
+				7C4275AD232F86E700CC0767 /* MapViews.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -185,12 +188,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C5F7CE2232E4D9C00272CA1 /* IPADFooterBox.swift in Sources */,
-				7C5F7CDE232E3FDC00272CA1 /* CallButtonView.swift in Sources */,
+				7C5F7CE2232E4D9C00272CA1 /* IPadFooterViews.swift in Sources */,
+				7C4275AC232F7AC300CC0767 /* MainViews.swift in Sources */,
 				7C394CFE231E53CC007DD0B1 /* MainViewController.swift in Sources */,
 				7C394D0E231E973B007DD0B1 /* MapViewController.swift in Sources */,
-				7C5F7CDC232E340200272CA1 /* PopupBoxView.swift in Sources */,
+				7C5F7CDC232E340200272CA1 /* IPhonePopupViews.swift in Sources */,
 				7C8B62592320F0260034CD9D /* PermissionManager.swift in Sources */,
+				7C4275AE232F86E700CC0767 /* MapViews.swift in Sources */,
 				7C568C69231FBF7F006D8ACF /* LocationManager.swift in Sources */,
 				7C8B625D232139F90034CD9D /* CustomAnnotation.swift in Sources */,
 				7C394D12231ED925007DD0B1 /* StaticProperties.swift in Sources */,
