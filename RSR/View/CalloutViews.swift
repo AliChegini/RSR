@@ -9,68 +9,25 @@
 import UIKit
 import MapKit
 
-// callout consist of two parts --- static and dynamic
-// static : top and bottom labels
-// dynamic: address label
 
 class CalloutViews: UIView {
     
-    let calloutWithoutAddress: UIImageView = {
+    // label at the top
+    let titleLabel: UILabel = {
         
-        let calloutView = UIImageView()
-        calloutView.translatesAutoresizingMaskIntoConstraints = false
-        calloutView.layer.cornerRadius = 10
-        calloutView.layer.masksToBounds = true
-        calloutView.image = UIImage(named: "address_back")
+        let label = UILabel()
+        label.text = "Uw locatie:"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = .white
         
-        
-        
-        let titleLabel = UILabel()
-        titleLabel.text = "Uw locatie:"
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 1
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        titleLabel.textColor = .white
-        
-        
-        
-        let instructionLabel = UILabel()
-        instructionLabel.text = "Onthoud deze locatie voor het telefoongesprek."
-        instructionLabel.translatesAutoresizingMaskIntoConstraints = false
-        instructionLabel.textAlignment = .center
-        instructionLabel.numberOfLines = 2
-        instructionLabel.lineBreakMode = .byWordWrapping
-        instructionLabel.font = UIFont.systemFont(ofSize: 14)
-        instructionLabel.textColor = .white
-        
-        
-        // label at top of the bubble
-        calloutView.addSubview(titleLabel)
-        // label at bottom of the bubble
-        calloutView.addSubview(instructionLabel)
-        
-        
-        
-        NSLayoutConstraint.activate([
-            
-            // auto layout constraints for titleLabel
-            titleLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 20),
-            
-            // auto layout constraints for instructionLabel
-            instructionLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
-            instructionLabel.topAnchor.constraint(equalTo: calloutView.bottomAnchor, constant: -80),
-            instructionLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor)
-            
-            ])
-        
-        
-        return calloutView
+        return label
     }()
     
     
-    
+    // label in the middle
     let addressLabel: UILabel = {
         
         let addressLabel = UILabel()
@@ -85,20 +42,69 @@ class CalloutViews: UIView {
     }()
     
     
-    
-    func configureAddressLabel(address: String) {
-        addressLabel.text = address
+    // label at the bottom
+    let instructionLabel: UILabel = {
         
-        calloutWithoutAddress.addSubview(addressLabel)
+        let label = UILabel()
+        label.text = "Onthoud deze locatie voor het telefoongesprek."
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .white
+        
+        return label
+    }()
+    
+    
+    // calloutView contains all the labels
+    let calloutView: UIImageView = {
+        
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        view.image = UIImage(named: "address_back")
+        
+        return view
+    }()
+    
+    
 
-        // constraints for addressLabel
+    
+    func setupViews(view: UIView) {
+        
+        calloutView.addSubview(titleLabel)
+        calloutView.addSubview(addressLabel)
+        calloutView.addSubview(instructionLabel)
+        
+        view.addSubview(calloutView)
+        
         NSLayoutConstraint.activate([
-            addressLabel.centerXAnchor.constraint(equalTo: calloutWithoutAddress.centerXAnchor),
-            addressLabel.centerYAnchor.constraint(equalTo: calloutWithoutAddress.centerYAnchor),
-            addressLabel.widthAnchor.constraint(equalTo: calloutWithoutAddress.widthAnchor)
+            
+            // auto layout constraints for titleLabel
+            titleLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: calloutView.topAnchor, constant: 20),
+            
+            // auto layout constraints for addressLabel
+            addressLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
+            addressLabel.centerYAnchor.constraint(equalTo: calloutView.centerYAnchor),
+            addressLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor),
+            
+            // auto layout constraints for instructionLabel
+            instructionLabel.centerXAnchor.constraint(equalTo: calloutView.centerXAnchor),
+            instructionLabel.topAnchor.constraint(equalTo: calloutView.bottomAnchor, constant: -80),
+            instructionLabel.widthAnchor.constraint(equalTo: calloutView.widthAnchor),
+            
+            // auto layout constraints for calloutView
+            calloutView.bottomAnchor.constraint(equalTo: view.topAnchor),
+            calloutView.widthAnchor.constraint(equalToConstant: 250),
+            calloutView.heightAnchor.constraint(equalToConstant: 250),
+            calloutView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
+    
             ])
         
     }
     
-
 }

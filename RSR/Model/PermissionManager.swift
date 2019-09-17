@@ -49,6 +49,3 @@ class PermissionManager: NSObject, CLLocationManagerDelegate {
     
 }
 
-
-
-

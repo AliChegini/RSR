@@ -57,8 +57,7 @@ class MapViews: UIView {
             callButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
             callButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             callButton.heightAnchor.constraint(equalToConstant: 70.0),
-            callButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            callButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            callButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40)
             
             ])
         

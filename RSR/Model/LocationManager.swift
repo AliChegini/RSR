@@ -58,14 +58,17 @@ extension LocationManager: CLLocationManagerDelegate {
             if let placemark = placemark {
                 var stringAddress = ""
                 guard let info = placemark.first else {
-                    // TODO: could not find placemarks
                     return
                 }
                 
                 // constructing string address to show user
                 
                 if let streetName = info.thoroughfare {
-                    stringAddress += "\(streetName), "
+                    stringAddress += "\(streetName) "
+                }
+                
+                if let streetNumber = info.subThoroughfare {
+                    stringAddress += "\(streetNumber), "
                 }
                 
                 

@@ -1,5 +1,5 @@
 //
-//  Errors.swift
+//  RSREnums.swift
 //  RSR
 //
 //  Created by Ehsan on 05/09/2019.
@@ -7,6 +7,14 @@
 //
 
 import Foundation
+
+
+enum NetworkStatus {
+    case connected
+    case notConnected
+    case unknown
+}
+
 
 enum RSRErrors: Error {
     case disallowedByUser

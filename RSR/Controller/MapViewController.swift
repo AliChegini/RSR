@@ -13,20 +13,20 @@ import Network
 
 class MapViewController: UIViewController, MKMapViewDelegate {
     
-    private let mapViewElements = MapViews()
+    // UI elements and a function to setup the autolayout constraints are included in mapViewElements
+    let mapViewElements = MapViews()
     
-    // calloutView consist of two parts,
-    // static parts(top and bottom label) and dynamic part(address)
-    private let callout = CalloutViews()
+    // UI elements and a function to setup the autolayout constraints are included in calloutElements
+    let calloutElements = CalloutViews()
     
     // All the UI elements for iPhone popup, and a function to
     // setup the autolayout constraints are included in popupElements
-    private let popupElements = IPhonePopupViews()
+    let popupElements = IPhonePopupViews()
     
-    
+
     // All the UI elements for iPad footer, and a function to
     // setup the autolayout constraints are included in footerElements
-    private let footerElements = IPadFooterViews()
+    let footerElements = IPadFooterViews()
     
     
     private let permissionManager = PermissionManager()
@@ -43,8 +43,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // by default network status is unknown
     var networkStatus: NetworkStatus = .unknown
     
-    var pin: CustomAnnotation!
     
+    var pin: CustomAnnotation!
     
     
     override func viewDidLoad() {
@@ -53,16 +53,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         setupNavigationBar()
         mapViewElements.setupViews(view: view)
         
+        // check device type and show related popup/footerView
         if UIDevice.current.userInterfaceIdiom == .phone {
             popupElements.setupViews(view: view)
         } else if UIDevice.current.userInterfaceIdiom == .pad {
             mapViewElements.callButton.isHidden = true
-            // add ipad footer box here
+            footerElements.setupViews(view: view)
         }
-        
-        
-        
-        //setupViews()
         
     }
     
@@ -70,11 +67,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        mapViewElements.mapView.delegate = self
-        
         permissionManager.permissionDelegate = self
         locationManager.locationDelegate = self
-        
+        mapViewElements.mapView.delegate = self
         
         // check for internet connection
         networkMonitor.pathUpdateHandler = { path in
@@ -96,7 +91,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             showPermissionAlert()
         }
         
-    
+        
         // if device is notConnected show network alert
         if networkStatus == .notConnected{
             showNetworkAlert()
@@ -109,13 +104,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     
     @objc func callRSR() {
-        popupElements.popupBox.isHidden = false
+        UIView.transition(with: popupElements.popupBox, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.popupElements.popupBox.isHidden = false
+        })
+        
         hideElements()
     }
     
     
     @objc func cancelAction() {
-        popupElements.popupBox.isHidden = true
+        UIView.transition(with: popupElements.popupBox, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.popupElements.popupBox.isHidden = true
+        })
+        
         showElements()
     }
     
@@ -128,40 +129,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     
-    
-    // LocationManagerDelegate methods
-    
-    func obtainedLocation(_ address: String, _ coordinate: CLLocationCoordinate2D) {
-        // mapView preparation
-        // TODO: need refactoring
-        pin = CustomAnnotation(coordinate: coordinate, title: address)
-        mapViewElements.mapView.addAnnotation(pin)
-        isUserLocationObtained = true
-        callout.configureAddressLabel(address: address)
-        
-        // Zooming on annotation
-        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-        let region = MKCoordinateRegion(center: coordinate, span: span)
-        mapViewElements.mapView.setRegion(region, animated: true)
-        
-        mapViewElements.mapView.selectAnnotation(pin, animated: true)
-    }
-    
-    
-    func failedToObtainLocation(_ error: Error) {
-        isUserLocationObtained = false
-        print("Failed to obtain location: \(error.localizedDescription)")
-    }
-    
-    
-    // PermissionManagerDelegate methods
-    
-    func authorizationSucceeded() {
-        print("permission is granted")
-    }
-    
-    func authorizationFailedWithStatus(_ status: CLAuthorizationStatus) {
-        print("permission is not granted --- status \(status)")
+    @objc func callRSRIpad() {
+        let number = "00319007788990"
+        if let url = URL(string: "tel://\(number)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
     }
     
     
@@ -177,29 +149,54 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     
-    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        
-        view.addSubview(callout.calloutWithoutAddress)
-        
-        // constraints for calloutView
-        // view is the pin(marker)
-        NSLayoutConstraint.activate([
-            callout.calloutWithoutAddress.bottomAnchor.constraint(equalTo: view.topAnchor),
-            callout.calloutWithoutAddress.widthAnchor.constraint(equalToConstant: 250),
-            callout.calloutWithoutAddress.heightAnchor.constraint(equalToConstant: 250),
-            callout.calloutWithoutAddress.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
-            ])
+        calloutElements.setupViews(view: view)
     }
     
-
 }
 
 
 
-// extension
+// MapViewController Extension
 
 extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate {
+    
+    // PermissionManagerDelegate methods
+    
+    func authorizationSucceeded() {
+        print("permission is granted")
+    }
+    
+    func authorizationFailedWithStatus(_ status: CLAuthorizationStatus) {
+        print("permission is not granted --- status \(status)")
+    }
+    
+    
+    // LocationManagerDelegate methods
+    
+    func obtainedLocation(_ address: String, _ coordinate: CLLocationCoordinate2D) {
+        
+        pin = CustomAnnotation(coordinate: coordinate, title: address)
+        mapViewElements.mapView.addAnnotation(pin)
+        isUserLocationObtained = true
+        calloutElements.addressLabel.text = address
+        
+        // Zooming on annotation
+        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        mapViewElements.mapView.setRegion(region, animated: true)
+        
+        mapViewElements.mapView.selectAnnotation(pin, animated: true)
+    }
+    
+    
+    func failedToObtainLocation(_ error: Error) {
+        isUserLocationObtained = false
+        print("Failed to obtain location: \(error.localizedDescription)")
+    }
+    
+
+    // Helper methods related to setting up views
     
     func setupNavigationBar() {
         navigationItem.title = "RSR Pechhulp"
@@ -245,21 +242,17 @@ extension MapViewController: LocationManagerDelegate, PermissionManagerDelegate 
     
     
     
-    
-    func setupViews() {
-        
-    }
-    
-    
     func hideElements() {
-        callout.calloutWithoutAddress.isHidden = true
-        //callButton.isHidden = true
+        UIView.transition(with: calloutElements.calloutView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.calloutElements.calloutView.isHidden = true
+        })
     }
+    
     
     func showElements() {
-        callout.calloutWithoutAddress.isHidden = false
-        //callButton.isHidden = false
+        UIView.transition(with: calloutElements.calloutView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.calloutElements.calloutView.isHidden = false
+        })
     }
-    
     
 }

@@ -50,7 +50,7 @@ class MainViews: UIView {
         button.setImage(iconImage, for: .normal)
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 50)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 150)
-        button.addTarget(self, action: #selector(showAbout), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showPrivacyPolicy), for: .touchUpInside)
 
         return button
     }()
@@ -88,12 +88,14 @@ class MainViews: UIView {
             // auto layout constraint for stackview(buttons)
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            stackView.widthAnchor.constraint(equalTo: view.widthAnchor),
             
             // auto layout constraint for buttons
             assistanceButton.heightAnchor.constraint(equalToConstant: 70),
-            aboutButton.heightAnchor.constraint(equalToConstant: 70)
+            assistanceButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -40),
+            
+            aboutButton.heightAnchor.constraint(equalToConstant: 70),
+            aboutButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -40),
             
             ])
         
@@ -102,12 +104,12 @@ class MainViews: UIView {
     
     
     @objc func showMap() {
-        
+        // implementation in MainViewController
     }
     
     
-    @objc func showAbout() {
-        
+    @objc func showPrivacyPolicy() {
+        // implementation in MainViewController
     }
     
 

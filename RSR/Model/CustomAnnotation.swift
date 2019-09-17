@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 
-// class to model custom annotation object
+// Class to model custom annotation object
 
 class CustomAnnotation: NSObject, MKAnnotation {
     
